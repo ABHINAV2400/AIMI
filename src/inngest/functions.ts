@@ -192,7 +192,7 @@ export const codeAgentFunction = inngest.createFunction(
           fragment: {
             create: {
               sandboxUrl: sandboxUrl,
-              title: "Fragmenet",
+              title: "Fragment",
               files: result.state.data.files,
             },
           },
