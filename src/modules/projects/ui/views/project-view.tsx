@@ -14,7 +14,6 @@ import { FragmentWeb } from "../components/fragment-web";
 import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CodeView } from "@/components/code-view";
 import { FileExplorer } from "@/components/file-explorer";
 
 interface Props {
@@ -44,7 +43,7 @@ export const ProjectView = ({ projectId }: Props) => {
             />
           </Suspense>
         </ResizablePanel>
-        <ResizableHandle withHandle />
+        <ResizableHandle className="hover:bg-primary transition-colors" />
         <ResizablePanel defaultSize={65} minSize={50}>
           <Tabs
             className="h-full gap-y-0"
@@ -72,7 +71,7 @@ export const ProjectView = ({ projectId }: Props) => {
             <TabsContent value="preview">
               {!!activeFragment && <FragmentWeb data={activeFragment} />}
             </TabsContent>
-            <TabsContent value="code">
+            <TabsContent value="code" className="min-h-0">
               {!!activeFragment?.files && (
                 <FileExplorer
                   files={activeFragment.files as { [path: string]: string }}
