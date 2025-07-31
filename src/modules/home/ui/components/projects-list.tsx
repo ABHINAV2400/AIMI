@@ -41,7 +41,7 @@ export const ProjectsList = () => {
               <div className="flex items-center gap-x-4">
                 <Image
                   src="/lovable-logo-icon.svg"
-                  alt="Lovable"
+                  alt="Aimi"
                   width={32}
                   height={32}
                   className="object-contain"

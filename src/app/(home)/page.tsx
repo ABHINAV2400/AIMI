@@ -19,7 +19,7 @@ const Page = () => {
             height={40}
             className="inline-block"
           />
-          <h1 className="text-2xl md:text-5xl font-bold">Lovable</h1>
+          <h1 className="text-2xl md:text-5xl font-bold">Aimi</h1>
         </div>
         <p className="text-lg md:text-xl text-muted-foreground text-center">
           Create apps and websites by chatting with AI

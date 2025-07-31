@@ -13,7 +13,7 @@ const Page = () => {
         <div className="flex flex-col items-center">
           <Image
             src="/lovable-logo-icon.svg"
-            alt="Lovable"
+            alt="Aimi"
             width={50}
             height={50}
             className="hidden md:block"
