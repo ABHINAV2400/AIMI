@@ -14,6 +14,25 @@ import { useRouter } from "next/navigation";
 import { PROJECT_TEMPLATES } from "../../constants";
 import { useClerk } from "@clerk/nextjs";
 
+/**
+ * Project Creation Form Component
+ * 
+ * This form allows users to create new AI-powered code generation projects.
+ * It handles user input validation, project creation via tRPC, and navigation
+ * to the new project page upon successful creation.
+ * 
+ * Features:
+ * - Auto-resizing textarea for project descriptions
+ * - Form validation with Zod schema
+ * - Template suggestions for common project types
+ * - Credit consumption and rate limiting
+ * - Error handling and user feedback
+ */
+
+/**
+ * Form validation schema
+ * Ensures project descriptions are between 1-10000 characters
+ */
 const formSchema = z.object({
   value: z
     .string()
@@ -21,6 +40,12 @@ const formSchema = z.object({
     .max(10000, { message: "Value is too long" }),
 });
 
+/**
+ * Main project creation form component
+ * 
+ * Renders a form for creating new AI code generation projects with
+ * template suggestions and real-time validation.
+ */
 export const ProjectForm = () => {
   const router = useRouter();
   const trpc = useTRPC();
