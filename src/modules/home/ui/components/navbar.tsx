@@ -25,11 +25,11 @@ export const NavBar = () => {
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/lovable-logo-icon.svg"
-            alt="Lovable"
+            alt="Aimi"
             width={24}
             height={24}
           />
-          <span className="font-semibold text-lg">Lovable</span>
+          <span className="font-semibold text-lg">Aimi</span>
         </Link>
         <SignedOut>
           <div className="flex gap-2">

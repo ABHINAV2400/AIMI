@@ -42,7 +42,7 @@ export const ProjectHeader = ({ projectId }: Props) => {
           >
             <Image
               src="/lovable-logo-icon.svg"
-              alt="Lovable"
+              alt="Aimi"
               width={18}
               height={18}
             />
