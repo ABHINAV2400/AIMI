@@ -42,9 +42,15 @@ export const ProjectForm = () => {
       },
 
       onError: (error) => {
+        toast.error(error.message)
+        
         if (error?.data?.code === "UNAUTHORIZED") {
           clerk.openSignIn();
         }
+
+        if (error?.data?.code === "TOO_MANY_REQUESTS") {
+            router.push("/pricing");
+          }
       },
     })
   );
