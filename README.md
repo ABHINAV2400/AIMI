@@ -1,7 +1,5 @@
 # AIMI
 
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/ABHINAV2400/AIMI)
-
 AIMI is an AI-powered web application that allows you to build, preview, and interact with web applications through a conversational interface. Describe what you want to create, and AIMI's AI agent will generate the code and deploy it to a live, interactive sandbox environment.
 
 ## Key Features
