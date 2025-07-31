@@ -18,7 +18,7 @@ export const Usage = ({ points, msBeforeNext }: Props) => {
       <div className="flex items-center gap-x-2">
         <div>
           <p className="text-sm">
-            {points} {hasProAccess ? "" : "free"} credits remianing
+            {points} {hasProAccess ? "" : "free"} credits remaining
           </p>
           <p className="text-xs text-muted-foreground">
             Resets in{" "}
