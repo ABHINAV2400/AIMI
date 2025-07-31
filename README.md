@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AIMI
+
+[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/ABHINAV2400/AIMI)
+
+AIMI is an AI-powered web application that allows you to build, preview, and interact with web applications through a conversational interface. Describe what you want to create, and AIMI's AI agent will generate the code and deploy it to a live, interactive sandbox environment.
+
+## Key Features
+
+-   **Conversational App Generation**: Build web applications by simply describing your requirements in a chat.
+-   **Live Interactive Previews**: Instantly view and interact with your generated application within a secure E2B code interpreter sandbox.
+-   **Integrated Development View**: A split-screen interface featuring the AI chat, a file explorer for the generated code, and the live application preview.
+-   **User & Project Management**: Secure user authentication via Clerk, with support for managing multiple projects.
+-   **Usage-Based Credits**: A built-in credit system with free and pro tiers to manage generation costs.
+-   **Pre-configured Tech Stack**: The agent works within a sandboxed Next.js environment with shadcn/ui and Tailwind CSS pre-installed.
+
+## How It Works
+
+1.  **User Prompt**: A user signs in, creates a project, and describes the application or component they want to build.
+2.  **tRPC Request**: The prompt is sent to the backend via a tRPC mutation.
+3.  **Inngest Job**: An Inngest function is triggered to handle the asynchronous code generation task.
+4.  **AI Agent & Sandbox**: An AI agent, powered by the Inngest Agent Kit and OpenAI, receives the prompt. It operates within an E2B Code Interpreter sandbox to perform tasks like:
+    -   Installing npm packages.
+    -   Creating and updating Next.js, React, and TypeScript files.
+    -   Writing code that uses the pre-installed shadcn/ui components and Tailwind CSS.
+5.  **Live Preview**: Once generation is complete, the sandbox provides a live URL for the running Next.js application.
+6.  **UI Update**: The frontend receives the sandbox URL and generated file structure. The user can then see a live preview of the app, browse the generated code, and continue the conversation with the AI agent.
+
+## Tech Stack
+
+-   **Framework**: [Next.js](https://nextjs.org/) (App Router)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **UI**: [React](https://react.dev/), [shadcn/ui](https://ui.shadcn.com/), [Tailwind CSS](https://tailwindcss.com/)
+-   **API**: [tRPC](https://trpc.io/)
+-   **Database**: [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/)
+-   **Background Jobs & AI Agents**: [Inngest](https://www.inngest.com/)
+-   **Code Sandboxing**: [E2B Code Interpreter](https://e2b.dev/)
+-   **Authentication**: [Clerk](https://clerk.com/)
+-   **State Management**: [TanStack Query](https://tanstack.com/query/latest)
+
+## Project Structure
+
+The repository is organized into modules to separate concerns and features.
+
+```
+├── prisma/               # Prisma schema, migrations, and database client
+├── public/               # Static assets
+├── sandbox-templates/    # E2B sandbox Dockerfile and configuration
+├── src/
+│   ├── app/              # Next.js App Router pages and layouts
+│   ├── components/       # Reusable UI components (including shadcn/ui)
+│   ├── inngest/          # Inngest client, functions, and agent logic
+│   ├── lib/              # Core utilities, database client, and usage logic
+│   ├── modules/          # Feature-based modules (home, projects, messages)
+│   └── trpc/             # tRPC server and client configuration
+└── ...
+```
 
 ## Getting Started
 
-First, run the development server:
+To run this project locally, you will need to set up the required services and environment variables.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+-   Node.js
+-   npm, pnpm, or yarn
+-   A PostgreSQL database
+-   API keys for Clerk, Inngest, E2B, and OpenAI.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1.  **Clone the repository:**
 
-## Learn More
+    ```bash
+    git clone https://github.com/ABHINAV2400/AIMI.git
+    cd AIMI
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2.  **Install dependencies:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    ```bash
+    npm install
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3.  **Set up environment variables:**
 
-## Deploy on Vercel
+    Create a `.env.local` file in the root of the project and add the following variables.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    ```env
+    # Prisma / PostgreSQL Database
+    DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require"
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    # Clerk Authentication
+    # Get these from your Clerk dashboard
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+    CLERK_SECRET_KEY=
+
+    # Inngest
+    # Get these from your Inngest dashboard
+    INNGEST_EVENT_KEY=
+    INNGEST_SIGNING_KEY=
+
+    # E2B Sandbox
+    # Get this from your E2B dashboard
+    E2B_API_KEY=
+
+    # OpenAI
+    # Your OpenAI API key
+    OPENAI_API_KEY=
+    ```
+
+4.  **Run database migrations:**
+
+    This command will sync your Prisma schema with your PostgreSQL database.
+
+    ```bash
+    npx prisma migrate dev
+    ```
+
+5.  **Run the development server:**
+
+    ```bash
+    npm run dev
+    ```
+
+The application will be available at `http://localhost:3000`.
