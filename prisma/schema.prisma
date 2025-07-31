@@ -1,68 +1,155 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+/**
+ * Prisma Database Schema
+ * 
+ * This schema defines the database structure for the AIMI application,
+ * an AI-powered code generation platform. The schema includes:
+ * 
+ * - Projects: User-created coding projects
+ * - Messages: Conversation history between users and AI
+ * - Fragments: Generated code and live previews
+ * - Usage: Credit tracking and rate limiting
+ * 
+ * Learn more about Prisma: https://pris.ly/d/prisma-schema
+ * For performance optimization: https://pris.ly/cli/accelerate-init
+ */
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+/**
+ * Prisma Client Generator
+ * Generates the TypeScript client for database operations
+ * Output is placed in a custom location for better organization
+ */
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
+/**
+ * Database Configuration
+ * Uses PostgreSQL as the primary database with connection via environment variable
+ */
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+/**
+ * Project Model
+ * 
+ * Represents a user's coding project where AI generates code based on prompts.
+ * Each project contains a conversation history (messages) and generated artifacts.
+ * 
+ * @field id - Unique project identifier (UUID)
+ * @field name - Auto-generated project name (e.g., "happy-turtle")
+ * @field userId - Clerk user ID who owns this project
+ * @field createdAt - Project creation timestamp
+ * @field updatedAt - Last modification timestamp
+ * @field messages - Conversation history with the AI agent
+ */
 model Project {
   id        String   @id @default(uuid())
-  name      String
-  userId    String
+  name      String   // Auto-generated friendly name
+  userId    String   // Clerk user identifier
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  messages Message[]
+  // Relationships
+  messages Message[] // One-to-many: project has many messages
 }
 
+/**
+ * Message Role Enumeration
+ * Defines who sent a message in the conversation
+ */
 enum MessageRole {
-  USER
-  ASSISTANT
+  USER      // Message from the user
+  ASSISTANT // Message from the AI agent
 }
 
+/**
+ * Message Type Enumeration
+ * Categorizes messages by their purpose and success status
+ */
 enum MessageType {
-  RESULT
-  ERROR
+  RESULT // Successful response with content
+  ERROR  // Error message when something went wrong
 }
 
+/**
+ * Message Model
+ * 
+ * Stores conversation history between users and the AI agent.
+ * Each message belongs to a project and may include generated code fragments.
+ * 
+ * @field id - Unique message identifier (UUID)
+ * @field content - The actual message text or AI response
+ * @field role - Whether message is from USER or ASSISTANT
+ * @field type - Whether message is a RESULT or ERROR
+ * @field createdAt - Message creation timestamp
+ * @field updatedAt - Last modification timestamp
+ * @field projectId - Foreign key to parent project
+ * @field project - Relationship to parent project
+ * @field fragment - Optional generated code fragment (for assistant messages)
+ */
 model Message {
   id        String      @id @default(uuid())
-  content   String
-  role      MessageRole
-  type      MessageType
+  content   String      // Message text content
+  role      MessageRole // USER or ASSISTANT
+  type      MessageType // RESULT or ERROR
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
+  // Foreign Key Relationships
   projectId String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  fragment Fragment?
+  // Optional Generated Content
+  fragment Fragment? // One-to-one: message may have one fragment
 }
 
+/**
+ * Fragment Model
+ * 
+ * Stores AI-generated code artifacts and their associated metadata.
+ * Each fragment represents a complete, runnable code generation result
+ * with live preview capabilities.
+ * 
+ * @field id - Unique fragment identifier (UUID)
+ * @field messageId - Foreign key to parent message (unique)
+ * @field message - Relationship to parent message
+ * @field sandboxUrl - Live preview URL for the generated code
+ * @field title - Human-readable title describing the fragment
+ * @field files - JSON object containing all generated files and content
+ * @field createdAt - Fragment creation timestamp
+ * @field updatedAt - Last modification timestamp
+ */
 model Fragment {
   id        String  @id @default(uuid())
-  messageId String  @unique
+  messageId String  @unique // One-to-one relationship with message
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
-  sandboxUrl String
-  title      String
-  files      Json
+  // Generated Content
+  sandboxUrl String // E2B sandbox live preview URL
+  title      String // User-friendly fragment title
+  files      Json   // Generated files as JSON: {path: content}
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+/**
+ * Usage Model
+ * 
+ * Tracks user credit consumption and rate limiting for AI generation requests.
+ * Used by the rate-limiter-flexible library to enforce usage quotas.
+ * 
+ * @field key - User identifier (typically Clerk user ID)
+ * @field points - Remaining credits/points for the user
+ * @field expire - When the current usage period expires (nullable)
+ * 
+ * Note: This table structure is required by rate-limiter-flexible
+ */
 model Usage {
-  key    String    @id
-  points Int
-  expire DateTime?
+  key    String    @id      // User identifier (primary key)
+  points Int                // Remaining credits
+  expire DateTime?          // Expiration timestamp (nullable)
 }
